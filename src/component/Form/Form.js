@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-
+import axios from 'axios'; 
 
 class Form extends Component {
     constructor(props) {
       super(props);
 
         this.state = {
-          value:'',
+          products: [],
           image: '',
           product: '',
           price: ''
@@ -15,8 +15,11 @@ class Form extends Component {
         this.handleProductChange = this.handleProductChange.bind(this);
         this.handlePriceChange = this.handlePriceChange.bind(this);
         this.handleClick = this.handleClick.bind(this); 
+        this.addProduct= this.addProduct.bind(this);
       }
     handleImageChange(event) {
+      console.log(event);
+      
       this.setState({image: event.target.value});
     }
     handleProductChange(event) {
@@ -26,10 +29,27 @@ class Form extends Component {
       this.setState({price: event.target.value});
     }
     handleClick(e){
-        console.log()
+        this.setState({
+          image: '',
+          product: '',
+          price: ''
+      })
+    }
+
+    addProduct(){
+    const  newProduct = {
+        name: this.state.name,
+        price: this.state.price,
+        imageurl:this.state.imageurl
+      }
+      axios.post('/api/product/product', newProduct).then((res)=>{
+          this.setState({products: res.data})
+      })
     }
 
     render() {
+      
+      
       return (
         <div>
             <h1> Form </h1>
@@ -53,7 +73,7 @@ class Form extends Component {
                 </label>
               <br/>
 
-              <button onClick={(e) => this.handleClick(e)}> Add to inventory</button>
+              <button onClick={(e) => this.addProduct(e)}> Add to inventory</button>
               <button onClick={(e) => this.handleClick(e)}> Cancel </button>
 
               </form>
